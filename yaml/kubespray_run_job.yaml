@@ -12,7 +12,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: CLUSTER_NAME
-          value: test_cluster
+          value: test_cluster2
         - name: MASTERS
           value: k8s2-master01:192.168.10.231
         - name: WORKERS
