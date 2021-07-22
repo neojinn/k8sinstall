@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kubespray
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubespray
+        image: 192.168.0.100:5000/kubespray/kb-kubespray:k1.20.7
+        imagePullPolicy: Always
+        env:
+        - name: CLUSTER_NAME
+          value: test_cluster
+        - name: MASTERS
+          value: k8s2-master01:192.168.10.231
+        - name: WORKERS
+          value: k8s2-worker01:192.168.10.241,k8s2-worker02:192.168.10.242
+        - name: PRIVATE_DNS
+          value: 192.168.10.20
+        - name: PRIVATE_REPO
+          value: 192.168.10.20
+        - name: PRIVATE_REGISTRY
+          value: 192.168.10.20:5000
+        volumeMounts:
+        - name: ssh-key-volume
+          mountPath: "/etc/ssh-key"
+        - name: inventory-volume
+          mountPath: "/kubespray/inventory"
+      volumes:
+      - name: ssh-key-volume
+        secret:
+          secretName: kubespray-ssh-key
+          defaultMode: 256
+      - name: inventory-volume
+        emptyDir: {}
+      restartPolicy: Never
+  backoffLimit: 0
